@@ -1,6 +1,7 @@
 package ie.gmit.sw;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -8,7 +9,9 @@ import java.util.Scanner;
 public class Menu {
 	private static Menu m = null;
 	private int choice;
-	
+	private File file;
+	private Scanner in = new Scanner(System.in);
+	private ReadTrainingData rtd;
 
 	private Menu() {
 
@@ -22,7 +25,7 @@ public class Menu {
 	}
 
 	public void showMenu() throws IOException {
-		Scanner in = new Scanner(System.in);
+		
 		System.out.println(ConsoleColour.WHITE);
 		System.out.println("************************************************************");
 		System.out.println("*      GMIT - Dept. Computer Science & Applied Physics     *");
@@ -40,7 +43,7 @@ public class Menu {
 		System.out.print(ConsoleColour.BLACK_BOLD_BRIGHT);
 		System.out.print("Select Option [1-4]>");
 		System.out.println();
-		setChoice(in.nextInt());
+		choice=in.nextInt();
 		processChoice();
 		//in.close();
 	}
@@ -48,16 +51,26 @@ public class Menu {
 	private void processChoice() throws IOException {
 		switch (choice) {
 		case 1:
-			
+			if(file!=null) {
+				System.out.println("Training");
+			}else {
+				System.out.println("There is no training file selected!");
+			}
+			break;
 		case 2:
+			rtd=new ReadTrainingData();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("Please enter file name: ");
 			String filename = reader.readLine();
 			
-			System.out.println("File name is:"+ filename);
+			rtd.readFile(filename);
 			break;
 		}
-
+		System.out.print("Select Option [1-4]>");
+		System.out.println();
+		choice=in.nextInt();
+		processChoice();
+		
 	}
 
 	public int getChoice() {
