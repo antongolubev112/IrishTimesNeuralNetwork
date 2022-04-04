@@ -2,13 +2,20 @@ package ie.gmit.sw;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class Headline {
 	private String headline;
 	private String expected;
 	private LocalDate date;
+	private List<Integer> shingledHeadline;
 	
-	
+	public List<Integer> getShingledHeadline() {
+		return shingledHeadline;
+	}
+	public void setShingledHeadline(List<Integer> shingledHeadline) {
+		this.shingledHeadline = shingledHeadline;
+	}
 	public Headline(String line) {
 		//split the line
 		String[] split = line.split(",");
@@ -24,7 +31,7 @@ public class Headline {
 		//set the variables
 		expected=split[1];
 		headline=split[2];
-		
+		shingledHeadline=null;
 	}
 	public String getHeadline() {
 		return headline;
