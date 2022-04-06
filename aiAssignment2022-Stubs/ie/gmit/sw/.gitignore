@@ -5,3 +5,7 @@
 /ReadTrainingData.class
 /Headline.class
 /Shingler.class
+/FeatureVectoriser.class
+/ReadCSV.class
+/NNRunner.class
+/TrainingDataFactory.class

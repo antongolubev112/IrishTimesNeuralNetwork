@@ -5,17 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 public class Headline {
-	private String headline;
-	private String expected;
-	private LocalDate date;
+	private int hashedDate;
+	private double hashedExpected;
 	private List<Integer> shingledHeadline;
 	
-	public List<Integer> getShingledHeadline() {
-		return shingledHeadline;
-	}
-	public void setShingledHeadline(List<Integer> shingledHeadline) {
-		this.shingledHeadline = shingledHeadline;
-	}
 	public Headline(String line) {
 		//split the line
 		String[] split = line.split(",");
@@ -25,31 +18,33 @@ public class Headline {
 		split[0]=new StringBuilder(split[0]).insert(split[0].length()-5,"-").toString();
 		
 		//parse date
-		date = LocalDate.parse(split[0]);
-		System.out.println("date:" +date);
+		hashedDate = LocalDate.parse(split[0]).hashCode();
 		
-		//set the variables
-		expected=split[1];
-		headline=split[2];
-		shingledHeadline=null;
+		hashedExpected=split[1].hashCode();
+		System.out.println(hashedExpected);
+		shingledHeadline=s.createShingle(split[2],3);
 	}
-	public String getHeadline() {
-		return headline;
+	
+	public double getHashedExpected() {
+		return hashedExpected;
 	}
-	public String getExpected() {
-		return expected;
+	public void setHashedExpected(double hashedExpected) {
+		this.hashedExpected = hashedExpected;
 	}
-	public LocalDate getDate() {
-		return date;
+
+	private static Shingler s=Shingler.getInstance();
+	
+	public List<Integer> getShingledHeadline() {
+		return shingledHeadline;
 	}
-	public void setHeadline(String headline) {
-		this.headline = headline;
+	public int getHashedDate() {
+		return hashedDate;
 	}
-	public void setExpected(String expected) {
-		this.expected = expected;
+	public void setHashedDate(int hashedDate) {
+		this.hashedDate = hashedDate;
 	}
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setShingledHeadline(List<Integer> shingledHeadline) {
+		this.shingledHeadline = shingledHeadline;
 	}
 	
 	

@@ -1,6 +1,6 @@
 package ie.gmit.sw;
 
-public class Runner {
+public class NNRunner {
 	private static Menu menu=Menu.getInstance();
 	
 	public static void main(String[] args) throws Exception {
