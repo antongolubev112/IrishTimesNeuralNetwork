@@ -1,6 +1,9 @@
 package ie.gmit.sw;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class TrainingDataFactory {
 	private static TrainingDataFactory tdf = null;
@@ -32,25 +35,36 @@ public class TrainingDataFactory {
 		i++;
 	}
 	
-	public void createExpectedArray(ArrayList<Headline> headlines, int vecSize) {
-		expectedHash= new double[headlines.size()][1];
-		double [] expectedArray=new double[1];
-		int i=0;
-		for(Headline h: headlines) {
-			expectedArray[0]=h.getHashedExpected();
-			expectedHash[i]=expectedArray;
+	public double[][] dateVectoriser(ArrayList<Headline> headlines, int vecSize) {
+		int i = 0;
+		Set<String> set = new HashSet<>();
+		for (Headline h : headlines) {
+			set.add(h.getExpected());
+			i++;
 		}
-
-		//increment counter
-		i++;
+		
+		List<String> list=new ArrayList<>(set);
+		double[][] dateVectors = new double[headlines.size()][90];
+		
+		System.out.println("size of map: "+list.size());
+		for (int k=0; k<list.size(); k++) {
+			for(int j=0; j<headlines.size();j++) {
+				if(list.get(k)==headlines.get(j).getExpected()) {
+					dateVectors[j][k]=dateVectors[j][k]+1;
+				}
+				
+			}
+		}
+		
+//		for(double [] array: dateVectors) {
+//			for(double d: array) {
+//				System.out.print(d+" ");
+//			}
+//			System.out.println("\n");
+//		}
+		
+		expectedHash=dateVectors;
+		return dateVectors;
 	}
 	
-	public void createNN(ArrayList<Headline> headlines, int vecSize) {
-		createHeadlineArray(headlines, vecSize);
-		createExpectedArray(headlines, vecSize);
-
-		EncogNN neuralNet= new EncogNN(vecSize, 2, expectedHash, headlineVectors);
-		neuralNet.train();
-		return ;
-	}
 }

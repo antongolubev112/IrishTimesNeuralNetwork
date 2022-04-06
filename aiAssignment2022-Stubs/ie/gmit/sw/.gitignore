@@ -9,3 +9,6 @@
 /ReadCSV.class
 /NNRunner.class
 /TrainingDataFactory.class
+/NNFactory.class
+/ExpectedMap.class
+/Mapper.class

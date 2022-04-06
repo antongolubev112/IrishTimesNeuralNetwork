@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Headline {
 	private int hashedDate;
-	private double hashedExpected;
 	private List<Integer> shingledHeadline;
+	private String expected;
 	
-	public Headline(String line) {
+	public Headline(String line, int shingleSize) {
 		//split the line
 		String[] split = line.split(",");
 		
@@ -20,16 +20,16 @@ public class Headline {
 		//parse date
 		hashedDate = LocalDate.parse(split[0]).hashCode();
 		
-		hashedExpected=split[1].hashCode();
-		System.out.println(hashedExpected);
-		shingledHeadline=s.createShingle(split[2],3);
+		expected=split[1];
+		shingledHeadline=s.createShingle(split[2],shingleSize);
 	}
 	
-	public double getHashedExpected() {
-		return hashedExpected;
+	
+	public String getExpected() {
+		return expected;
 	}
-	public void setHashedExpected(double hashedExpected) {
-		this.hashedExpected = hashedExpected;
+	public void setExpected(String expected) {
+		this.expected = expected;
 	}
 
 	private static Shingler s=Shingler.getInstance();

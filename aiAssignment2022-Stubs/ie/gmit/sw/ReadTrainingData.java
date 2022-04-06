@@ -17,9 +17,8 @@ import org.encog.ml.data.basic.BasicMLDataSet;
 public class ReadTrainingData {
 	private ArrayList<Headline> fileContent = new ArrayList<>();
 	//private List<ArrayList<Integer>> headlineVectors; 
-	private int vecSize=200;
-	private FeatureVectoriser fv;
-	private double[][] headlineVector;
+	private int vecSize=2000;
+
 	private Scanner sc=null;
 	private static TrainingDataFactory tdf=TrainingDataFactory.getInstance();
 	
@@ -49,55 +48,4 @@ public class ReadTrainingData {
 	private void createNeuralNet() {
 		tdf.createNN(fileContent,vecSize);
 	}
-
-//	private void convert() {
-//		fv=new FeatureVectoriser();
-//		
-//		//initialise vector list
-//		headlineVectors= new ArrayList<>(fileContent.size());
-//		
-//		int i=0;
-//		for(Headline h: fileContent) {
-//			MLData nnInput= new BasicMLData(fv.hashVectorizer(h, vecSize));
-//			MLData nnOutput= new BasicMLData(h.getHashedExpected());
-//			MLDataPair dataPair=new BasicMLDataPair(nnInput,nnOutput);
-//			headlineVectors.add(i,dataPair);
-//			i++;
-//		}
-//		//shingleHeadline();
-//		createNN(createDataSet());
-//	}
-	
-	private void shingleHeadline() {
-		//hashVectors();
-		
-		//createNN(createDataSet());
-	}
-	
-	// adapted from https://en.wikipedia.org/wiki/Feature_hashing
-	
-//	private void hashVectors() {
-//		
-//		
-//		//initialise vector list
-//		headlineVector= new double[headlines.length][vecSize];
-//
-//		//loop counter
-//		int i=0;
-//		for(Headline h: headlines) {
-//			headlineVector[i]=fv.hashVectorizer(h, vecSize);
-//			//perform feature vectorisation on the headlines
-//			//createDataPair for each headline
-//		}
-//
-//		//increment counter
-//		i++;
-//	}
-	
-	
-
-		
-	
-	
-	//1: Create a fixed size vector
 }

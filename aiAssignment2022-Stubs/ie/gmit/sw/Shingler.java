@@ -44,7 +44,7 @@ public class Shingler {
 		}
 
 		shingle = new ArrayList<>(Arrays.asList(result));
-		System.out.println("Shingles list created of size: " + shingle.size());
+		//System.out.println("Shingles list created of size: " + shingle.size());
 		
 		return shingle;
 	}

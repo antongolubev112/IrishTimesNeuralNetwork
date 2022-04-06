@@ -11,7 +11,10 @@ public class Menu {
 	private int choice;
 	private File file;
 	private Scanner in = new Scanner(System.in);
-	private ReadTrainingData rtd;
+	private ReadCSV read;
+	private static NNFactory factory=NNFactory.getInstance();
+	private EncogNN nn;
+	
 
 	private Menu() {
 
@@ -33,9 +36,8 @@ public class Menu {
 		System.out.println("*             Artificial Intelligence Assignment           *");
 		System.out.println("*                                                          *");
 		System.out.println("************************************************************");
-		System.out.println("(1) Train Neural Network");
-		System.out.println("(2) Upload test data");
-		System.out.println("(2) See Neural Network stats");
+		System.out.println("(1) Upload Test data + Train Network");
+		System.out.println("(2) Upload Test Data");
 		System.out.println("(3) Don't hard-code paths / file fames or bad things will happen");
 		System.out.println("(4) Quit");
 
@@ -49,6 +51,10 @@ public class Menu {
 	}
 
 	private void processChoice() throws IOException {
+		Scanner scanner;
+		String filename;
+		int vecSize ;
+		int shingleSize;
 		switch (choice) {
 		case 1:
 			if(file!=null) {
@@ -58,18 +64,37 @@ public class Menu {
 			}
 			break;
 		case 2:
-			rtd=new ReadTrainingData();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			scanner= new Scanner(System.in);
 			System.out.println("Please enter file name: ");
-			String filename = reader.readLine();
+			filename = scanner.nextLine();
+			System.out.println("Please enter the vector size for the inputs: ");
+			vecSize = scanner.nextInt();
+			System.out.println("Please enter the size of the shingles: ");
+			shingleSize = scanner.nextInt();
 			
-			rtd.readFile(filename);
+			nn=factory.create(vecSize, shingleSize, filename);
+			break;
+		
+		case 3: 
+			if(nn==null) {
+				System.out.println("No neural network available, please upload test data");
+			}else {
+				scanner= new Scanner(System.in);
+				System.out.println("Please enter file name: ");
+				filename= scanner.nextLine();
+				System.out.println("Please enter the vector size for the inputs: ");
+				vecSize = scanner.nextInt();
+				System.out.println("Please enter the size of the shingles: ");
+				shingleSize = scanner.nextInt();
+				factory.test(nn, vecSize, shingleSize, filename);
+			}
 			break;
 		}
 		System.out.print("Select Option [1-4]>");
 		System.out.println();
 		choice=in.nextInt();
 		processChoice();
+		
 		
 	}
 
