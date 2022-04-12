@@ -1,13 +1,9 @@
 package ie.gmit.sw;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Arrays;
 
 public class FeatureVectoriser {
+	private static Mapper map=Mapper.getInstance();
 	//private ArrayList<Integer> vector;
 
 	public double[] expectedVectorizer(Headline headline, int vecSize) {
@@ -17,13 +13,14 @@ public class FeatureVectoriser {
 		
 		vector[Math.abs(hash) % vecSize] = vector[Math.abs(hash) % vecSize] + 1;
 		
-		System.out.println("Incremented value at position "+Math.abs(hash) % vecSize);
+		//System.out.println("Incremented value at position "+Math.abs(hash) % vecSize);
+		//System.out.println(Arrays.toString(vector));
 		
 		return vector;
 	}
 
 	public double[] hashVectorizer(Headline headline, int vecSize) {
-
+		//System.out.println("feature");
 		// create a new arraylist, initialise all values with 0
 		double vector[] = new double[vecSize];
 		// Arrays.setAll(vector, 0.0);
@@ -32,16 +29,13 @@ public class FeatureVectoriser {
 			// set the index to be the shingle to be the remainder of the hashcode / size of
 			// the vector
 			// increment the value at that index by one
-			// System.out.println("vector value: " + vector[Math.abs(shingle) % vecSize]);
-			// System.out.println("shingle: " + shingle);
-			// vector.set(Math.abs(shingle) % vecSize, vector.get(Math.abs(shingle) %
-			// vecSize) + 1);
 			vector[Math.abs(shingle) % vecSize] = vector[Math.abs(shingle) % vecSize] + 1;
+			//System.out.println("Incremented value at position "+Math.abs(shingle) % vecSize +"value is: "+vector[Math.abs(shingle) % vecSize]);
 			// System.out.println("vector value: " + vector[Math.abs(shingle) % vecSize]);
 		}
 
 		vector[Math.abs(headline.getHashedDate()) % vecSize] = vector[Math.abs(headline.getHashedDate()) % vecSize] + 1;
-
+		//System.out.println(Arrays.toString(vector));
 		return vector;
 	}
 

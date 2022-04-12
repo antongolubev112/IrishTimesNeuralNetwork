@@ -19,8 +19,7 @@ public class ReadCSV {
 	private FeatureVectoriser fv;
 	private int vecSize;
 	private int shingleSize;
-	
-	
+
 	
 	public ReadCSV(int vecSize, int shingleSize) {
 		this.data = new ArrayList<>();

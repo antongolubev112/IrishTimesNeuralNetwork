@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Headline {
+	private static Shingler s=Shingler.getInstance();
 	private int hashedDate;
 	private List<Integer> shingledHeadline;
 	private String expected;
@@ -32,8 +33,6 @@ public class Headline {
 		this.expected = expected;
 	}
 
-	private static Shingler s=Shingler.getInstance();
-	
 	public List<Integer> getShingledHeadline() {
 		return shingledHeadline;
 	}

@@ -21,7 +21,7 @@ public class NNFactory {
 		 read= new ReadCSV(vecSize,shingleSize);
 		 MLDataSet dataSet= read.readFile(file);
 		 
-	     EncogNN neuralNet= new EncogNN(vecSize, 2, dataSet);
+	     EncogNN neuralNet= new EncogNN(vecSize, dataSet);
 	     neuralNet.train();
 	     return neuralNet;
 
