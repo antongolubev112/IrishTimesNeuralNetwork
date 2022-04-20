@@ -16,20 +16,21 @@ public class NNFactory {
 
 		return nnf;
 	}
+	
 
+	//create neural network
 	public EncogNN create(int vecSize,int shingleSize, String file){
 		 read= new ReadCSV(vecSize,shingleSize);
-		 MLDataSet dataSet= read.readFile(file);
 		 
-	     EncogNN neuralNet= new EncogNN(vecSize, dataSet);
+	     EncogNN neuralNet= new EncogNN(vecSize, read.readFile(file));
 	     neuralNet.train();
 	     return neuralNet;
 
 	   }
 	
+	//test neural network
 	public void test(EncogNN nn, int vecSize, int shingleSize, String file) {
 		read= new ReadCSV(vecSize,shingleSize);
-		MLDataSet dataSet= read.readFile(file);
-		nn.test(dataSet);
+		nn.test(read.readFile(file));
 	}
 }

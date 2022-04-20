@@ -12,10 +12,7 @@ public class Shingler {
 	private Shingler() {
 
 	}
-	
-	/**
-	 * @return instance of Singleton
-	 */
+
 	public static Shingler getInstance() {
 		if (s == null)
 			s = new Shingler();
@@ -23,7 +20,9 @@ public class Shingler {
 		return s;
 	}
 	
+	//this function splits the headline into an array of words of a given size
 	public List<Integer> createShingle(String headline, int size) {
+		//split the headline into an array strings
 		String[] headlineArray=headline.split(" ");
 		
 		int amountOfWords = headlineArray.length;

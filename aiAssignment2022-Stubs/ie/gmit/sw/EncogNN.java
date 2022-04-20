@@ -12,35 +12,43 @@ import org.encog.ml.data.MLDataPair;
 import org.encog.ml.data.MLDataSet;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.ml.data.basic.BasicMLDataSet;
+import org.encog.ml.train.strategy.Strategy;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
 import org.encog.neural.networks.training.propagation.back.Backpropagation;
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation;
+import org.encog.neural.networks.training.strategy.SmartLearningRate;
 
 public class EncogNN {
 	private BasicNetwork network;
+	private static Encoder map=Encoder.getInstance();
 
 	private int inputNodes;
-	private int hiddenNodes=0;
+	//90 output nodes because there are 90 categories
 	private final int OUTPUT_NODES = 90;
 	private MLDataSet dataSet;
 	private boolean trained;
 	
 
 	public EncogNN(int inputNodes, MLDataSet dataSet) {
+		//initialise neural network
 		this.network = new BasicNetwork();
 		this.inputNodes = inputNodes;
-		this.hiddenNodes = dataSet.size()/(10*(inputNodes+OUTPUT_NODES));
 		this.dataSet = dataSet;
 		this.trained = false;
 		
 		System.out.println("input size"+dataSet.getInputSize());
 		System.out.println("ideal size"+dataSet.getIdealSize());
-		System.out.println("hiddenNodes: "+(2*inputNodes));
 		
 		// Declare topology
+		
+		//Input layer
+		//number of input nodes is the size of the feature vector
 		network.addLayer(new BasicLayer(null, false, this.inputNodes));
-		network.addLayer(new BasicLayer(new ActivationReLU(), true, (int)Math.sqrt(inputNodes*OUTPUT_NODES)));
+		
+		//number of hidden nodes is the square root of the input nodes and the output nodes
+		network.addLayer(new BasicLayer(new ActivationSigmoid(), true, inputNodes*2));
+		
 		// output layer, 82 nodes because there are 82 possible outputs
 		network.addLayer(new BasicLayer(new ActivationSoftMax(), true, OUTPUT_NODES));
 		network.getStructure().finalizeStructure();
@@ -53,78 +61,81 @@ public class EncogNN {
 		dataSet=norm.normalise(dataSet,0,1);
 
 		ResilientPropagation train = new ResilientPropagation(network, dataSet);
-		double minError = 0.02;
+		train.setBatchSize(0);
+		
+		//train.
+		//desired error rate
+		double minError = 0.10;
 		int epoch = 1;
 		System.out.println("[INFO] Training...");
-		do {
-			train.iteration();
-			System.out.println("error: " + train.getError());
-			epoch++;
-		} while (train.getError() > minError);
+		//do {
+		train.iteration(5);
+		System.out.println("error: " + train.getError());
+		epoch++;
+		//} while (train.getError() > minError);
 		train.finishTraining();
+		
 		System.out.println("[INFO] Finished Training in " + epoch + " epochs with e=" + train.getError());
-		trained = true;
 		System.out.println("[INFO] Shutting down.");
+		trained = true;
 		Encog.getInstance().shutdown();
 	}
 	
-	public int classifyAction(MLData input) {
-		return ((int) network.classify(input) + 1);
-	}
-
 	public void test(MLDataSet testSet) {
 		double correct = 0;
 		double total = 0;
 
 		for (MLDataPair pair : testSet) {
 			total++;
+			
+			//classify the input
 			MLData output = network.compute(pair.getInput());
-
-			double[] y = output.getData();
+			
+			//get the output
+			double[] outputArray = output.getData();
 			
 			//System.out.println(Arrays.toString(y));
-//			System.out.println(pair.getInput().getData(0) + "," + pair.getInput().getData(1) + ","
-//					+ pair.getInput().getData(2) + ": Y=" + (int) Math.round(output.getData(0)) + ", Yd="
-//					+ (int) pair.getIdeal().getData(0));
-
-			// System.out.println(Arrays.toString(y));
-
+			
+			//check to see what the biggest value is because SoftMax activation returns probabilities of every category
+			//the highest probability is the predicted class
 			double max = 0;
 			int maxPos = 0;
-			for (int i = 0; i < y.length; i++) {
-				if (y[i] > max) {
-					max = y[i];
+			for (int i = 0; i < outputArray.length; i++) {
+				if (outputArray[i] > max) {
+					max = outputArray[i];
 					maxPos = i;
 				}
 			}
 			
+			//get the expected category
+			double[]expectedArray = pair.getIdeal().getData();
+			// System.out.println(Arrays.toString(yd));
 			
-
-			// System.out.println(y.length);
-			double[]yd = pair.getIdeal().getData();
-			
+			//get the position of the expected value in the expected array
 			double expMax=0;
 			double expPos=0;
-			for (int i = 0; i < yd.length; i++) {
-				if (yd[i] > expMax) {
-					expMax = yd[i];
+			for (int i = 0; i < expectedArray.length; i++) {
+				if (expectedArray[i] > expMax) {
+					expMax = expectedArray[i];
 					expPos = i;
 				}
 			}
-			System.out.println("Max position is: " + maxPos + " Value is: " + max);
-//			System.out.println("Expected position is: "+expPos+"with a Value of: "+expMax);
-//			//System.out.println("classified as: "+classifyAction(pair.getInput()));
-//			System.out.println("Value of nn result:" + yd[maxPos]);
-			if (yd[maxPos] == 1.0) {
+			
+			System.out.println("Neural Network classified the headline as: "+map.getMappedCategories().get(maxPos));
+			//java -cp nn.jar;C:\Users\anton\Desktop\College\AI\IrishTimesNeuralNetwork\externalJars\* ie.gmit.sw.NNRunner
+//			System.out.println("The outputted classification is: " + maxPos + " Value is: " + max);
+//			System.out.println("The expected classification is: "+expPos+" with a Value of: "+expMax);
+//			System.out.println("Value of classication in the expected array:" + expectedArray[maxPos]+"\n");
+			
+			//if the position of the highest value of the output array in the expectedArray is 1
+			//then prediction is correct
+			if (expectedArray[maxPos] == 1.0) {
 				correct++;
 			}
-			// System.out.println(Arrays.toString(yd));
-
-//			if(Arrays.equals(y, yd)) {
-//				correct++;
-//			}		
+			
 		}
 		System.out.println("[INFO] Testing complete. Acc= " + ((correct / total) * 100));
+
 	}
 	
 

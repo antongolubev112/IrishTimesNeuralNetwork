@@ -14,3 +14,15 @@
 /Mapper.class
 /CreateDataSet.class
 /Normaliser.class
+/BackPropagationTrainer.class
+/BackpropagationTrainer.class
+/Trainator.class
+/NeuralNetwork.class
+/Activator$ActivationFunction.class
+/Activator.class
+/ActivatorFactory.class
+/HyperbolicTangentActivator.class
+/SigmoidActivator.class
+/SetUpNeuralNet.class
+/ProcessData.class
+/Encoder.class

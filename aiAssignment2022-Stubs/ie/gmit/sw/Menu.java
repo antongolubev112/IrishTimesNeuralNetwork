@@ -8,9 +8,7 @@ import java.util.Scanner;
 public class Menu {
 	private static Menu m = null;
 	private int choice;
-	private File file;
 	private Scanner in = new Scanner(System.in);
-	private ReadCSV read;
 	private static NNFactory factory=NNFactory.getInstance();
 	private EncogNN nn;
 	private Scanner scanner;
@@ -41,12 +39,12 @@ public class Menu {
 		System.out.println("************************************************************");
 		System.out.println("(1) Upload Training data + Train Network");
 		System.out.println("(2) Upload Test Data");
-		System.out.println("(3) Don't hard-code paths / file fames or bad things will happen");
+		System.out.println("(3) Classify a Single Headline");
 		System.out.println("(4) Quit");
 
 		// Output a menu of options and solicit text from the user
 		System.out.print(ConsoleColour.BLACK_BOLD_BRIGHT);
-		System.out.print("Select Option [1-4]>");
+		System.out.print("Select Option [1-3]>");
 		System.out.println();
 		choice=in.nextInt();
 		processChoice();
@@ -65,6 +63,7 @@ public class Menu {
 			System.out.println("Please enter the size of the shingles: ");
 			shingleSize = scanner.nextInt();
 			
+			//create and train neural net
 			nn=factory.create(vecSize, shingleSize, filename);
 			break;
 		
@@ -75,11 +74,16 @@ public class Menu {
 				scanner= new Scanner(System.in);
 				System.out.println("Please enter file name: ");
 				filename= scanner.nextLine();
-
+				
+				//test the neural network
 				factory.test(nn, vecSize, shingleSize, filename);
 			}
 			break;
-			
+		
+		case 3:
+			System.out.println("Please enter a headline in the following format:");
+			System.out.println("Date(YYYYMMDD),headline category,headline:");
+			System.out.println("EG: 20210101,lifestyle.health-family,\"The art of medical observation\"");
 		default:
 			System.out.println("Please select a valid option");
 		}
